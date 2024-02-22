@@ -10,6 +10,7 @@ import {
   type Variables,
 } from 'relay-runtime';
 import {RelayEnvironmentProvider} from 'react-relay';
+import {getId} from './ObjectId';
 
 async function fetchQuery(params: RequestParameters, variables: Variables): Promise<GraphQLResponse> {
   const response = await fetch('/graphql', {
@@ -41,6 +42,8 @@ export interface Props {
 
 export function MutableRelayEnvironment(props: Props) {
   const [environment, setEnvironment] = useState(createNewEnvironment);
+
+  console.debug('MutableRelayEnvironment', getId(environment));
 
   function setNewEnvironment() {
     setEnvironment(createNewEnvironment());

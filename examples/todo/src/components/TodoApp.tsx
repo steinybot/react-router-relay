@@ -4,6 +4,7 @@ import TodoList from './TodoList';
 import * as React from 'react';
 import {SimpleEntryPointProps} from '@loop-payments/react-router-relay';
 import {CreateNewEnvironmentButton} from './CreateNewEnvironmentButton';
+import {addId, getId} from '../ObjectId';
 
 type PreloadedQueries = {
   todoAppQueryRef: TodoAppQuery;
@@ -11,6 +12,8 @@ type PreloadedQueries = {
 type Props = SimpleEntryPointProps<PreloadedQueries>;
 
 function TodoApp({queries}: Props): React.ReactNode {
+  console.debug('TodoApp', getId(queries.todoAppQueryRef.environment))
+
   const {user} = usePreloadedQuery<TodoAppQuery>(graphql`
       query TodoAppQuery($userId: String!, $status: String) @preloadable {
         user(id: $userId) @required(action: THROW) {
