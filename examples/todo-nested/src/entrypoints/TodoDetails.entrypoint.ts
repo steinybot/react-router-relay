@@ -12,7 +12,7 @@ const TodoDetailsEntrypoint: SimpleEntryPoint<TodoDetails> = {
             params: TodoDetailsQuery.params,
           },
           variables: {
-            todoId: params?.todoId
+            todoId: params?.todoId!
           },
         },
       },
