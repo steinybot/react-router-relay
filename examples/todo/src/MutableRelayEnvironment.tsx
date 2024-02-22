@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {createContext, ReactNode} from 'react';
+import {createContext, ReactNode, useState} from 'react';
 import {
   Environment,
   type GraphQLResponse,
@@ -10,8 +10,6 @@ import {
   type Variables,
 } from 'relay-runtime';
 import {RelayEnvironmentProvider} from 'react-relay';
-
-const ThemeContext = createContext('light');
 
 async function fetchQuery(params: RequestParameters, variables: Variables): Promise<GraphQLResponse> {
   const response = await fetch('/graphql', {
@@ -27,17 +25,30 @@ async function fetchQuery(params: RequestParameters, variables: Variables): Prom
   return response.json();
 }
 
+function createNewEnvironment() {
+  return new Environment({
+    network: Network.create(fetchQuery),
+    store: new Store(new RecordSource()),
+  });
+}
+
+export const MutableRelayEnvironmentContext = createContext<() => void>(() => {
+});
+
 export interface Props {
   children: ReactNode;
 }
 
 export function MutableRelayEnvironment(props: Props) {
-  const modernEnvironment: Environment = new Environment({
-    network: Network.create(fetchQuery),
-    store: new Store(new RecordSource()),
-  });
+  const [environment, setEnvironment] = useState(createNewEnvironment);
 
-  return <RelayEnvironmentProvider environment={modernEnvironment}>
-    {props.children}
-  </RelayEnvironmentProvider>;
+  function setNewEnvironment() {
+    setEnvironment(createNewEnvironment());
+  }
+
+  return <MutableRelayEnvironmentContext.Provider value={setNewEnvironment}>
+    <RelayEnvironmentProvider environment={environment}>
+      {props.children}
+    </RelayEnvironmentProvider>
+  </MutableRelayEnvironmentContext.Provider>;
 }

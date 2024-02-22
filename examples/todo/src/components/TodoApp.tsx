@@ -3,6 +3,7 @@ import {graphql, usePreloadedQuery} from 'react-relay';
 import TodoList from './TodoList';
 import * as React from 'react';
 import {SimpleEntryPointProps} from '@loop-payments/react-router-relay';
+import {CreateNewEnvironmentButton} from './CreateNewEnvironmentButton';
 
 type PreloadedQueries = {
   todoAppQueryRef: TodoAppQuery;
@@ -22,6 +23,8 @@ function TodoApp({queries}: Props): React.ReactNode {
     <section className="todoapp">
       <TodoList userRef={user} />
     </section>
+
+    <CreateNewEnvironmentButton />
 
     <footer className="info">
       <p>Double-click to edit a todo</p>
