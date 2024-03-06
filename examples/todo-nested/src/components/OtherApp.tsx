@@ -1,4 +1,4 @@
-import type {TodoAppQuery} from '../../__generated__/relay/TodoAppQuery.graphql';
+import type {OtherAppQuery} from '../../__generated__/relay/OtherAppQuery.graphql';
 import {graphql, usePreloadedQuery} from 'react-relay';
 import TodoList from './TodoList';
 import * as React from 'react';
@@ -6,29 +6,29 @@ import {SimpleEntryPointProps} from '@loop-payments/react-router-relay';
 import {Link, Outlet} from 'react-router-dom';
 
 type PreloadedQueries = {
-  todoAppQueryRef: TodoAppQuery;
+  otherAppQueryRef: OtherAppQuery;
 };
 type Props = SimpleEntryPointProps<PreloadedQueries>;
 
-function TodoApp({queries}: Props): React.ReactNode {
-  const {user} = usePreloadedQuery<TodoAppQuery>(graphql`
-      query TodoAppQuery($userId: String!, $status: String) @preloadable {
+function OtherApp({queries}: Props): React.ReactNode {
+  const {user} = usePreloadedQuery<OtherAppQuery>(graphql`
+      query OtherAppQuery($userId: String!, $status: String) @preloadable {
         user(id: $userId) @required(action: THROW) {
           ...TodoList_user
         }
       }
-    `, queries.todoAppQueryRef);
+    `, queries.otherAppQueryRef);
 
   return <div>
-    <section className="todoapp">
+    <section className="otherApp">
       <TodoList userRef={user} />
     </section>
 
     <Outlet />
 
-    <Link to="/todos/error">Crash!</Link>
+    <Link to="/others/error">Crash!</Link>
     <br />
-    <Link to="/others">Others</Link>
+    <Link to="/todos">Todos</Link>
 
     <footer className="info">
       <p>Double-click to edit a todo</p>
@@ -45,4 +45,4 @@ function TodoApp({queries}: Props): React.ReactNode {
   </div>;
 }
 
-export default TodoApp;
+export default OtherApp;

@@ -32,6 +32,11 @@ const compiler = webpack({
     }]
   },
   resolve: {
+    alias: {
+      'react': path.resolve(__dirname, 'node_modules/react'),
+      'react-relay': path.resolve(__dirname, 'node_modules/react-relay'),
+      'react-router-dom': path.resolve(__dirname, 'node_modules/react-router-dom'),
+    },
     extensions: ['.tsx', '.ts', '.js']
   },
   output: {

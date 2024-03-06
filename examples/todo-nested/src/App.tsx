@@ -5,10 +5,12 @@ import type {GraphQLResponse, RequestParameters, Variables} from 'relay-runtime'
 import {Environment, Network, RecordSource, Store} from 'relay-runtime';
 import {ErrorBoundary} from 'react-error-boundary';
 import TodoAppEntryPoint from './entrypoints/TodoApp.entrypoint';
-import TodoDetailsEntryPoint from './entrypoints/TodoDetails.entrypoint';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {EntryPointRouteObject, preparePreloadableRoutes} from '@loop-payments/react-router-relay';
 import {createRoot} from 'react-dom/client';
+import ThrowError from './components/ThrowError';
+import TodoErrorBoundary from './components/TodoErrorBoundary';
+import OtherAppEntryPoint from './entrypoints/OtherApp.entrypoint';
 
 async function fetchQuery(params: RequestParameters, variables: Variables): Promise<GraphQLResponse> {
   const response = await fetch('/graphql', {
@@ -32,19 +34,33 @@ const modernEnvironment: Environment = new Environment({
 const rootElement = document.getElementById('root')!;
 const root = createRoot(rootElement);
 
-const appEntryPoint: EntryPointRouteObject = {
-  path: '/',
-  entryPoint: TodoAppEntryPoint,
-  children: [
-    {
-      path: '/todos/:todoId',
-      entryPoint: TodoDetailsEntryPoint,
-    }
-  ]
-};
+const appEntryPoints: EntryPointRouteObject[] = [
+  {
+    path: '/todos',
+    entryPoint: TodoAppEntryPoint,
+    errorElement: <TodoErrorBoundary />,
+    children: [
+      {
+        path: 'error',
+        Component: ThrowError,
+      },
+    ],
+  },
+  {
+    path: '/others',
+    entryPoint: OtherAppEntryPoint,
+    errorElement: <TodoErrorBoundary />,
+    children: [
+      {
+        path: 'error',
+        Component: ThrowError,
+      },
+    ],
+  },
+];
 
 const routes = preparePreloadableRoutes(
-  [appEntryPoint], {
+  appEntryPoints, {
     getEnvironment() {
       return modernEnvironment;
     },
@@ -59,5 +75,5 @@ root.render(
         <RouterProvider router={router} />
       </ErrorBoundary>
     </React.Suspense>
-  </RelayEnvironmentProvider>
+  </RelayEnvironmentProvider>,
 );

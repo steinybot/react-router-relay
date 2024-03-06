@@ -12,12 +12,14 @@
   },
   "author": "engineering@loop.com",
   "license": "MIT",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-relay": "^15.0.0",
+    "react-router-dom": "^6.14.1"
+  },
   "devDependencies": {
     "@types/react-relay": "^14.1.4",
     "prettier": "^3.0.0",
-    "react": "^18.2.0",
-    "react-relay": "^15.0.0",
-    "react-router-dom": "^6.14.1",
     "typescript": "^5.1.6"
   },
   "repository": {
